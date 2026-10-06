@@ -2050,6 +2050,7 @@ object I18nKey:
     val `retry`: I18nKey = "retry"
     val `reconnecting`: I18nKey = "reconnecting"
     val `noNetwork`: I18nKey = "noNetwork"
+    val `friendsOnlineAndPlaying`: I18nKey = "friendsOnlineAndPlaying"
     val `favoriteOpponents`: I18nKey = "favoriteOpponents"
     val `follow`: I18nKey = "follow"
     val `following`: I18nKey = "following"
@@ -3171,6 +3172,8 @@ object I18nKey:
   object ublog:
     val `community`: I18nKey = "ublog:community"
     val `communityBlogs`: I18nKey = "ublog:communityBlogs"
+    val `best`: I18nKey = "ublog:best"
+    val `all`: I18nKey = "ublog:all"
     val `byMonth`: I18nKey = "ublog:byMonth"
     val `byTopic`: I18nKey = "ublog:byTopic"
     val `byLichess`: I18nKey = "ublog:byLichess"

@@ -3911,6 +3911,8 @@ interface I18n {
     freeOnlineChess: string;
     /** Friends */
     friends: string;
+    /** Friends online: %1$s */
+    friendsOnlineAndPlaying: I18nFormat;
     /** Game aborted */
     gameAborted: string;
     /** Game as GIF */
@@ -6225,6 +6227,10 @@ interface I18n {
     yearlyXArena: I18nFormat;
   };
   ublog: {
+    /** All */
+    all: string;
+    /** Best */
+    best: string;
     /** %s blog posts */
     blogPosts: I18nPlural;
     /** Blog posts by friends */

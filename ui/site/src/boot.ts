@@ -1,7 +1,7 @@
 /// <reference types="../types/ab" />
 import * as ab from 'ab/site';
 
-import { scrollToInnerSelector, requestIdleCallbackSafe } from 'lib';
+import { scrollToInnerSelector, requestIdleCallbackSafe, once } from 'lib';
 import { dispatchChessgroundResize } from 'lib/chessgroundResize';
 import { prefersLightThemeQuery } from 'lib/device';
 import { licon } from 'lib/licon';
@@ -25,12 +25,13 @@ export function boot() {
   const setBlind = location.hash === '#blind';
   const showDebug = location.hash.startsWith('#debug');
 
+  updateTimeAgo(1000);
+
   requestAnimationFrame(() => {
     initMiniBoards();
     initMiniGames();
     pubsub.on('content-loaded', initMiniBoards);
     pubsub.on('content-loaded', initMiniGames);
-    updateTimeAgo(1000);
     pubsub.on('content-loaded', renderTimeAgo);
     renderLocalizedTimestamps();
     pubsub.on('content-loaded', toggleBoxInit);
@@ -115,10 +116,19 @@ export function boot() {
 
     upgradeNag();
     mirrorCheck();
+    playerCounter();
   }, 800);
 }
 
 function mirrorCheck() {
   const mirrors: string[] = ['bealive.fit'];
   if (mirrors.includes(location.host)) location.href = 'https://lichess.org' + location.pathname;
+}
+
+function playerCounter() {
+  pubsub.after('socket.hasConnected').then(() => {
+    setTimeout(() => {
+      if (once('playerCounter', { hours: 3 })) xhrText('/player-count', { method: 'post' });
+    }, 1500);
+  });
 }
