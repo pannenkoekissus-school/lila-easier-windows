@@ -113,7 +113,10 @@ export async function addIncludes(includes: CwdPath[], key: TaskKey): Promise<vo
 }
 
 async function execute(t: Task, firstRun = false): Promise<void> {
-  const makeRelative = (files: AbsPath[]) => (t.root ? files.map(f => relative(t.root!, f)) : files);
+  // tasks expect root-relative paths with forward slashes, since they are
+  // also used as glob patterns and prefix checks (e.g. 'ui/', 'public/')
+  const makeRelative = (files: AbsPath[]) =>
+    t.root ? files.map(f => relative(t.root!, f).replaceAll('\\', '/')) : files;
   const debounced = [...t.debounce.files];
   const modified: AbsPath[] = [];
   const { rename } = t.debounce;

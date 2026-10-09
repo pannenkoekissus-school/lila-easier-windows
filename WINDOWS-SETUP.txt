@@ -1,0 +1,230 @@
+LILA ON WINDOWS — WHAT WE CHANGED AND HOW TO START IT AGAIN
+============================================================
+
+Working setup for the local dev environment:
+  lila      http://localhost:9663   (C:\Users\Gebruiker\lila)
+  lila-ws   ws://localhost:9664     (C:\Users\Gebruiker\lila-ws)
+  MongoDB   127.0.0.1:27017   (database "lichess")
+  Redis     127.0.0.1:6379
+  JDK 21 (JAVA_HOME=C:\tools\jdk-21.0.12.101-hotspot), Node 24, pnpm 12, sbt 2.0.10 (C:\tools\sbt\bin\sbt.bat)
+
+NOTE: this file is untracked in git. Delete it or add it to .gitignore before committing.
+
+
+PART 1 — THE ORIGINAL BUG FIX
+------------------------------
+modules/report/src/main/ui/ReportUi.scala   (committed)
+  The message checkboxes on /report/inbox/<username> were not re-ticked after the
+  report form was re-rendered following a validation failure.
+  Fix: selectedMsgIds(form) reads form("msgs").indexes and sets
+  checked = checkedMsgIds(msg.id).
+
+  Verified over HTTP with
+  C:\Users\Gebruiker\AppData\Local\Temp\opencode\2-verify-report.ps1
+  (script must send "Origin: http://localhost:9663" or POSTs get 403):
+      fresh form : 3 boxes, 0 checked
+      after error: 3 boxes, 2 checked
+      PASS - ticked checkboxes survive the failed submit
+
+
+PART 2 — FRONTEND BUILD FIXES (Windows) — lila repo, uncommitted
+-----------------------------------------------------------------
+  M ui/.build/src/env.ts
+  M ui/.build/src/esbuild.ts
+  M ui/.build/src/hash.ts
+  M ui/.build/src/parse.ts
+  M ui/.build/src/sass.ts
+  M ui/.build/src/task.ts
+
+  - Windows path shape: path.join/dirname emit backslashes while fast-glob emits
+    forward slashes -> every key/lookup is normalized with replaceAll('\\','/').
+  - sass.ts: fixed child process spawn/close handling.
+  - esbuild.ts (the one that broke the browser): inlineTask normalized only one
+    side of the manifest lookup, so the "site" inline root came out as
+    manifest["undefined"]. It now normalizes both sides AND throws
+    "no bundle module for inline '<src>'" instead of failing silently.
+
+  Rebuild (from C:\Users\Gebruiker\lila\ui\.build):
+      node --no-warnings src/main.ts
+  or from the repo root:  ./ui/build        (watch: ./ui/build -w)
+
+  Generated / untracked side effects:
+      ui/@types/lichess/i18n.d.ts
+      ui/lib/css/embed.css, ui/lib/css/plugin.css
+      public/compiled/manifest.<hash>.js  (gitignored, regenerated)
+
+  NOT durable: the sasso importer fix was applied directly inside the pnpm store
+  (node_modules/.pnpm/.../_importer.mjs) and is reverted by the next `pnpm install`.
+
+
+PART 3 — BACKEND/WINDOWS FIXES — lila repo, uncommitted
+--------------------------------------------------------
+  M build.sbt                     adds app-windows/ to unmanagedSourceDirectories
+                                  when os.name starts with "windows"
+  M project/Dependencies.scala    gates the netty epoll/kqueue classifier
+?? app-windows/reactivemongo/core/netty/Pack.scala
+                                  NIO-only shadow of reactivemongo's netty Pack;
+                                  on Windows epoll has no native library and the
+                                  driver dies with "Only supported on Linux".
+
+  Also environment (not in git): .sbtopts JVM options, and a purge of 0-byte
+  artifacts from %LOCALAPPDATA%\sbt\cache\v2\cas\ that blocked compilation.
+
+
+PART 4 — LILA-WS (C:\Users\Gebruiker\lila-ws, a fresh git clone)
+------------------------------------------------------------------
+  M build.sbt                             Windows-gated app-windows/ source dir
+  M src/main/scala/netty/Pack.scala       epoll/kqueue probe -> NIO fallback
+  M src/main/resources/application.conf   mongo.uri localhost -> 127.0.0.1
+?? .sbtopts                               -J-Xmx2g, -Dsbt.banner=false,
+                                          -Dscala.ext.dirs=C:\Users\Gebruiker\.sbt\1.0\java9-rt-ext-eclipse_adoptium_21_0_12_1
+?? app-windows/reactivemongo/core/netty/Pack.scala   NIO-only shadow
+
+  Three Windows blockers, in the order they appeared:
+
+  1. Fatal sbt crash on startup:
+         java.nio.file.InvalidPathException: Illegal char <0x0C> at index 0:
+         C:\Users\Gebruiker\.sbt\1.0\java9-rt-ext-eclipse_adoptium_21_0_12_1
+     sbt.bat generates -Dscala.ext.dirs="<path>" and the value arrives polluted
+     with a form-feed byte. Fixed by lila-ws/.sbtopts, which sbt appends AFTER
+     _JAVA_OPTS, so its clean value wins. (lila already had this line too.)
+
+  2. The WebSocket server's own Netty: netty/Pack.scala threw when epoll was
+     unavailable. Rewritten to probe epoll/kqueue by constructing and shutting
+     down an event loop group, falling back to NioEventLoopGroup /
+     NioServerSocketChannel.
+
+  3. MongoDB never reachable (IsPrimaryAvailable timeouts every ~8s):
+     a) "localhost" resolves to ::1 first, where wslrelay (not mongod) listens
+        -> application.conf now uses 127.0.0.1. (::1 is not connectable here.)
+     b) reactivemongo's own netty Pack then failed with "Only supported on
+        Linux" -> the same NIO shadow lila uses was added under app-windows/.
+     Final log line: Instantiated NettyPack(io.netty.channel.socket.nio.NioSocketChannel)
+     and zero timeouts.
+
+  Auth works with the existing dev data: lila-ws reads the "lila2" cookie
+  (sessionId), looks it up in the Mongo "security" collection and resolves the
+  user; Redis pub/sub is the lila <-> lila-ws transport, so no extra wiring.
+
+
+PART 5 — SUPPORT SCRIPTS
+--------------------------
+  C:\cmdThings\opencode-shell-execution\watcher.ps1
+      Pre-existing command runner: append commands to input.txt, results are
+      appended to output.txt. It only executes content when input.txt GROWS
+      (append, or rewrite with a short inert first line such as "# cleared"),
+      runs them sequentially in one PowerShell session (cd persists), and
+      blocks until each batch finishes.
+  C:\cmdThings\opencode-shell-execution\run-lila-ws.ps1
+      Starts lila-ws detached: cd to the clone, run sbt, log to lila-ws.log.
+  C:\cmdThings\opencode-shell-execution\lila-ws.log
+      lila-ws build/run log (UTF-8).
+
+
+PART 6 — COMMANDS USED
+------------------------
+  git clone --depth 1 https://github.com/lichess-org/lila-ws.git
+  pnpm install                                   (repo root)
+  node --no-warnings src/main.ts                 (full asset rebuild, in ui\.build)
+  ./lila.sh scalafmtCheckAll ; compile           (backend format check + compile)
+  Start-Process powershell -File C:\cmdThings\opencode-shell-execution\run-lila-ws.ps1
+  sbt.bat --server --supershell=false "show name" (sbt sanity check)
+  powershell -ExecutionPolicy Bypass -File C:\Users\Gebruiker\AppData\Local\Temp\opencode\2-verify-report.ps1
+  diagnostics: netstat -ano | Select-String ':9664', Get-Process java, log greps
+
+
+======================================================================
+PART 7 — STARTING IT ALL BACK UP
+======================================================================
+
+0) One-off checks (only if something was reinstalled)
+      java -version                    -> must be 21
+      node -v                          -> 24.x (v24.2.0 works; .node-version says v24.20)
+      redis on 127.0.0.1:6379 and mongodb on 127.0.0.1:27017 (native service OR docker, step 0b)
+      C:\Users\Gebruiker\lila-ws\.sbtopts must still exist (see PART 4)
+
+0b) REDIS + MONGODB IN DOCKER  (skip if they already run natively)
+    Both lila and lila-ws hardcode 127.0.0.1:27017 and 127.0.0.1:6379, and no auth
+    is configured, so the ports must be FREE first — stop the native services
+    (Windows services "MongoDB" / "Redis" or their processes) before starting these:
+
+      # Redis
+      docker run -d --name lila-redis -p 6379:6379 redis:7
+
+      # MongoDB (data kept in a named volume, db "lichess" is created on first write)
+      docker run -d --name lila-mongo -p 27017:27017 -v lila-mongo-data:/data/db mongo:8.0
+
+    Later starts (containers persist after reboot of Docker Desktop):
+      docker start lila-redis lila-mongo
+      docker ps                          # both should show "(serving/publishing) 0.0.0.0:6379->6379/tcp" etc.
+      docker logs -f lila-mongo          # confirm it is accepting connections
+
+    Stop / remove:
+      docker stop lila-redis lila-mongo
+      docker rm -f lila-redis lila-mongo # -f also when the container is running
+
+    Notes:
+      - Data lives in the Docker volume "lila-mongo-data". Starting a FRESH container
+        gives you an EMPTY database (you would have to sign up again). To keep the
+        data of a previously running native mongod: stop it, then mount its dbpath
+        instead of a volume, e.g. -v "<path-to-dbpath>:/data/db".
+      - Delete the old data only on purpose: docker volume rm lila-mongo-data
+      - Sanity check after startup:
+            netstat -ano | Select-String ':27017' | Select-String 'LISTENING'
+            docker exec lila-mongo mongosh --quiet --eval "db.adminCommand('ping')"
+
+
+1) START LILA  (skip if its sbt is already running)
+      cd C:\Users\Gebruiker\lila
+      ./lila.sh
+      # or: sbt --server --supershell=false run
+      # first request re-reads public/compiled/manifest.<hash>.js automatically,
+      # so no restart is needed after rebuilding assets.
+
+2) REBUILD THE FRONTEND if you changed any ui/ code or public assets are missing
+      cd C:\Users\Gebruiker\lila\ui\.build
+      node --no-warnings src/main.ts          # add -w for watch mode
+      # then hard-reload the browser with Ctrl+F5
+      # CAUTION: a `pnpm install` reverts the sasso importer patch (PART 2).
+
+3) START LILA-WS  (needed for WebSocket / inbox messaging)
+      Start-Process powershell -NoProfile -ExecutionPolicy Bypass `
+        -File C:\cmdThings\opencode-shell-execution\run-lila-ws.ps1 -WindowStyle Minimized
+      # equivalent, manually:
+      #   cd C:\Users\Gebruiker\lila-ws
+      #   C:\tools\sbt\bin\sbt.bat --server --supershell=false run
+      # Wait for this in lila-ws.log (first start after a change also compiles):
+      #   INFO l.w.n.NettyServer ... Listening to 9664
+
+4) VERIFY
+      netstat -ano | Select-String ':9664' | Select-String 'LISTENING'
+      Get-Content C:\cmdThings\opencode-shell-execution\lila-ws.log -Tail 20
+      #   expect:  Listening to 9664
+      #   expect:  Instantiated NettyPack(io.netty.channel.socket.nio.NioSocketChannel)
+      #   expect NO repeating "IsPrimaryAvailable" timeouts
+      # In the browser: open /report/inbox/<username>, Ctrl+F5, send a message.
+      # Re-run the regression check any time:
+      powershell -ExecutionPolicy Bypass -File C:\Users\Gebruiker\AppData\Local\Temp\opencode\2-verify-report.ps1
+
+5) STOPS / RESTARTS
+      lila-ws : Stop-Process -Id <its java PID> -Force   then repeat step 3
+                (a lila-ws code/config change requires this; lila does NOT)
+      lila    : Ctrl+C in its sbt window (or Stop-Process on its java PID)
+
+WHAT DOES NOT NEED DOING
+  - No lila restart after rebuilding assets (manifest is re-read per request).
+  - No lila-ws restart after lila changes: they talk over Redis pub/sub only.
+  - No Docker, no test suites; everything runs natively on Windows.
+
+IF SOMETHING BREAKS AGAIN
+  - sbt dies with InvalidPathException / "Illegal char" -> lila-ws/.sbtopts lost,
+    restore it from PART 4 (same line exists in C:\Users\Gebruiker\lila\.sbtopts).
+  - "Only supported on Linux" / netty epoll -> the app-windows/ shadows and the
+    netty Pack rewrite (PART 3/4) were reverted; they are Windows-gated in
+    build.sbt, so check that the `if os.name startsWith("windows")` block is
+    still present in both repos.
+  - Mongo timeouts again -> application.conf must say 127.0.0.1, not localhost
+    (::1 belongs to wslrelay here); if mongo runs in docker, check `docker ps`
+    and that nothing else grabbed 27017 (`netstat -ano | Select-String ':27017'`).
+  - Nothing executes through the command channel -> input.txt only triggers on
+    growth; append, or put an inert line such as "# cleared" first.

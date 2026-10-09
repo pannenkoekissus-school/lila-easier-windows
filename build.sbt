@@ -40,7 +40,12 @@ lazy val root = Project("lila", file("."))
     // Universal/target = <project target> / "universal". Overriding only Universal/target leaves the
     // project target at sbt 2.0's default, so crossTarget stays target/out/jvm/scala-3.8.4/lila and
     // zinc's inc_compile_3.zip stays inside the cache root — no "Cannot cache" warning.
-    Universal / target := baseDirectory.value / "target" / "universal"
+    Universal / target := baseDirectory.value / "target" / "universal",
+    Compile / unmanagedSourceDirectories ++= {
+      if System.getProperty("os.name").toLowerCase.startsWith("windows") then
+        Seq(baseDirectory.value / "app-windows")
+      else Nil
+    }
   )
 
 organization := "org.lichess"
@@ -63,8 +68,8 @@ libraryDependencies ++= pekko.bundle ++ playWs.bundle ++ macwire.bundle ++ scala
   play.json, play.logback, compression, hasher,
   reactivemongo.driver, /* reactivemongo.kamon, */ maxmind, scalatags,
   kamon.core, kamon.influxdb, kamon.metrics,
-  scaffeine, caffeine, lettuce, uaparser, nettyTransport, catsMtl
-) ++ tests.bundle
+  scaffeine, caffeine, lettuce, uaparser, catsMtl
+) ++ nettyTransport ++ tests.bundle
 
 // influences the compilation order
 // matches https://github.com/ornicar/lila-dep-graphs

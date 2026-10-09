@@ -80,7 +80,9 @@ async function parsePackage(root: string): Promise<Package> {
   const build = pkgInfo.pkg.build;
 
   // 'hash' and 'sync' paths beginning with '/' are repo relative, otherwise they are package relative
-  const normalize = (file: string) => (file.startsWith('/') ? file.slice(1) : join('ui', pkgInfo.name, file));
+  // always emit forward slashes, since the results are used as glob patterns
+  const normalize = (file: string) =>
+    (file.startsWith('/') ? file.slice(1) : join('ui', pkgInfo.name, file)).replaceAll('\\', '/');
   const normalizeObject = <T extends Record<string, any>>(o: T) =>
     Object.fromEntries(Object.entries(o).map(([k, v]) => [k, typeof v === 'string' ? normalize(v) : v]));
 

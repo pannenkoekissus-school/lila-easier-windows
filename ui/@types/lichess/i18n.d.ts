@@ -143,7 +143,7 @@ interface I18n {
     averageScore: string;
     /** Berserk */
     berserk: string;
-    /** When a player clicks the Berserk button at the beginning of the game, they lose half of their clock time, but the win is worth one extra tournament point. */
+    /** When a player clicks the Berserk button at the beginning of the game, they lose half of their clock time, but the win is worth one extra tournament point. */
     berserkAnswer: string;
     /** Berserk rate */
     berserkRate: string;
@@ -173,17 +173,17 @@ interface I18n {
     howArePlayersPaired: string;
     /** How are scores calculated? */
     howAreScoresCalculated: string;
-    /** A win has a base score of 2 points, a draw 1 point, and a loss is worth no points. */
+    /** A win has a base score of 2 points, a draw 1 point, and a loss is worth no points. */
     howAreScoresCalculatedAnswer: string;
     /** How does it end? */
     howDoesItEnd: string;
     /** The tournament has a countdown clock. When it reaches zero, the tournament rankings are frozen, and the winner is announced. Games in progress must be finished, however, they don't count for the tournament. */
     howDoesItEndAnswer: string;
-    /** At the start of the tournament, players are paired based on their rating. */
+    /** At the start of the tournament, players are paired based on their rating. */
     howDoesPairingWorkAnswer: string;
     /** How is the winner decided? */
     howIsTheWinnerDecided: string;
-    /** When the tournament time limit expires, the player with the most points is declared the winner. */
+    /** When the tournament time limit expires, the player with the most points is declared the winner. */
     howIsTheWinnerDecidedAnswer: string;
     /** Is it rated? */
     isItRated: string;
@@ -217,7 +217,7 @@ interface I18n {
     pointsAvg: string;
     /** Points sum */
     pointsSum: string;
-    /** Your rank average represents your typical finishing position, relative to the total number of players in each tournament. */
+    /** Your rank average represents your typical finishing position, relative to the total number of players in each tournament. */
     rankAverageHelp: string;
     /** Rank average */
     rankAvg: string;
@@ -631,7 +631,7 @@ interface I18n {
     newsEdit1: string;
     /** Add the recent news at the top. Don't delete previous news. */
     newsEdit2: string;
-    /** Separate news with --- */
+    /** Separate news with --- */
     newsEdit3: string;
     /** No classes yet. */
     noClassesYet: string;
@@ -693,7 +693,7 @@ interface I18n {
     resetPassword: string;
     /** Send a message to all students. */
     sendAMessage: string;
-    /** Student: %1$s */
+    /** Student: %1$s */
     studentCredentials: I18nFormat;
     /** Students */
     students: string;
@@ -721,7 +721,7 @@ interface I18n {
     variantXOverLastY: I18nFormat;
     /** Visible by both teachers and students of the class */
     visibleByBothStudentsAndTeachers: string;
-    /** Welcome to your class: %s. */
+    /** Welcome to your class: %s. */
     welcomeToClass: I18nFormat;
     /** Win rate */
     winrate: string;
@@ -1123,15 +1123,15 @@ interface I18n {
     passwordReset_subject: I18nFormat;
     /** Welcome to lichess.org, %s */
     welcome_subject: I18nFormat;
-    /** You have successfully created your account on https://lichess.org. */
+    /** You have successfully created your account on https://lichess.org. */
     welcome_text: I18nFormat;
   };
   faq: {
     /** Accounts */
     accounts: string;
-    /** The centipawn is the unit of measure used in chess as representation of the advantage. A centipawn is equal to 1/100th of a pawn. Therefore 100 centipawns = 1 pawn. These values play no formal role in the game but are useful to players, and essential in computer chess, for evaluating positions. */
+    /** The centipawn is the unit of measure used in chess as representation of the advantage. A centipawn is equal to 1/100th of a pawn. Therefore 100 centipawns = 1 pawn. These values play no formal role in the game but are useful to players, and essential in computer chess, for evaluating positions. */
     acplExplanation: string;
-    /** We regularly receive messages from users asking us for help to stop them from playing too much. */
+    /** We regularly receive messages from users asking us for help to stop them from playing too much. */
     adviceOnMitigatingAddiction: I18nFormat;
     /** an hourly Bullet tournament */
     aHourlyBulletTournament: string;
@@ -1139,7 +1139,7 @@ interface I18n {
     areThereWebsitesBasedOnLichess: string;
     /** many national master titles */
     asWellAsManyNMtitles: string;
-    /** Lichess time controls are based on estimated game duration = %1$s. */
+    /** Lichess time controls are based on estimated game duration = %1$s. */
     basedOnGameDuration: I18nFormat;
     /** being a patron */
     beingAPatron: string;
@@ -1165,21 +1165,21 @@ interface I18n {
     durationFormula: string;
     /** 8 chess variants */
     eightVariants: string;
-    /** 1. Go to lichess.org */
+    /** 1. Go to lichess.org */
     enableAutoplayForSoundsChromeSiteInformation: string;
-    /** 1. Go to lichess.org */
+    /** 1. Go to lichess.org */
     enableAutoplayForSoundsFirefox: string;
-    /** 1. Click the three dots in the top right corner */
+    /** 1. Click the three dots in the top right corner */
     enableAutoplayForSoundsMicrosoftEdge: string;
     /** Enable autoplay for sounds? */
     enableAutoplayForSoundsQ: string;
-    /** 1. Go to lichess.org */
+    /** 1. Go to lichess.org */
     enableAutoplayForSoundsSafari: string;
     /** Enable or disable notification popups? */
     enableDisableNotificationPopUps: string;
     /** Enable Zen mode in the %1$s, or by pressing %2$s during a game. */
     enableZenMode: I18nFormat;
-    /** This is a legal move known as "en passant". The Wikipedia article gives a %1$s. */
+    /** This is a legal move known as "en passant". The Wikipedia article gives a %1$s. */
     explainingEnPassant: I18nFormat;
     /** Fair Play */
     fairPlay: string;
@@ -1239,11 +1239,11 @@ interface I18n {
     leavingGameWithoutResigningExplanation: string;
     /** lee-chess */
     leechess: string;
-    /** Lichess can optionally send popup notifications, for example when it is your turn or you received a private message. */
+    /** Lichess can optionally send popup notifications, for example when it is your turn or you received a private message. */
     lichessCanOptionnalySendPopUps: string;
     /** Lichess is a combination of live/light/libre and chess. It is pronounced %1$s. */
     lichessCombinationLiveLightLibrePronounced: I18nFormat;
-    /** In the event of one player running out of time, that player will usually lose the game. However, the game is drawn if the position is such that the opponent cannot checkmate the player's king by any possible series of legal moves (%1$s). */
+    /** In the event of one player running out of time, that player will usually lose the game. However, the game is drawn if the position is such that the opponent cannot checkmate the player's king by any possible series of legal moves (%1$s). */
     lichessFollowFIDErules: I18nFormat;
     /** Lichess is powered by donations from patrons and the efforts of a team of volunteers. */
     lichessPoweredByDonationsAndVolunteers: string;
@@ -1257,7 +1257,7 @@ interface I18n {
     lichessTraining: string;
     /** Lichess userstyles */
     lichessUserstyles: string;
-    /** This honorific title is unofficial and only exists on Lichess. */
+    /** This honorific title is unofficial and only exists on Lichess. */
     lMtitleComesToYouDoNotRequestIt: string;
     /** To learn how to build a <a href='%1$s'>custom chess bot</a> to play on Lichess, please read <a href='%2$s'>this blog post about creating bots</a>. */
     makeBotDescription: I18nFormat;
@@ -1265,7 +1265,7 @@ interface I18n {
     makeBotTitle: string;
     /** stand-alone mental health condition */
     mentalHealthCondition: string;
-    /** Most browsers prevent sound from playing on newly-visited pages to protect users. */
+    /** Most browsers prevent sound from playing on newly-visited pages to protect users. */
     mostBrowsersPreventSoundAutoplay: string;
     /** The player has not yet finished enough rated games against %1$s in the rating category. */
     notPlayedEnoughRatedGamesAgainstX: I18nFormat;
@@ -1295,13 +1295,13 @@ interface I18n {
     ratingLeaderboards: string;
     /** One minute after a player is marked, their 40 latest rated games in the last 5 days are taken. If you were their opponent in one of those games, you lost rating (because of a loss or a draw), and your rating was not provisional, you get a rating refund. The refund is capped based on your peak rating and your rating progress after the game. (For example, if your rating greatly increased after that game, you might get no refund or only a partial refund.) A refund will never exceed 150 points. */
     ratingRefundExplanation: string;
-    /** Ratings are calculated using the Glicko-2 rating method developed by Mark Glickman. This is a very popular rating method, and is used by a significant number of chess organisations (FIDE being a notable counter-example, as they still use the dated Elo rating system). */
+    /** Ratings are calculated using the Glicko-2 rating method developed by Mark Glickman. This is a very popular rating method, and is used by a significant number of chess organisations (FIDE being a notable counter-example, as they still use the dated Elo rating system). */
     ratingSystemUsedByLichess: string;
     /** Threefold repetition is about repeated %1$s, not moves. Repetition does not have to occur consecutively. */
     repeatedPositionsThatMatters: I18nFormat;
     /** The 2nd requirement is so that players who no longer use their accounts stop populating leaderboards. */
     secondRequirementToStopOldPlayersTrustingLeaderboards: string;
-    /** If you have an OTB title, you can apply to have this displayed on your account by completing the %1$s, including a clear image of an identifying document/card and a selfie of you holding the document/card. */
+    /** If you have an OTB title, you can apply to have this displayed on your account by completing the %1$s, including a clear image of an identifying document/card and a selfie of you holding the document/card. */
     showYourTitle: I18nFormat;
     /** opponents of similar strength */
     similarOpponents: string;
@@ -1349,7 +1349,7 @@ interface I18n {
     whichRatingSystemUsedByLichess: string;
     /** Why are ratings higher compared to other sites and organisations such as FIDE, USCF and the ICC? */
     whyAreRatingHigher: string;
-    /** It is best not to think of ratings as absolute numbers, or compare them against other organisations. Different organisations have different levels of players, different rating systems (Elo, Glicko, Glicko-2, or a modified version of the aforementioned). These factors can drastically affect the absolute numbers (ratings). */
+    /** It is best not to think of ratings as absolute numbers, or compare them against other organisations. Different organisations have different levels of players, different rating systems (Elo, Glicko, Glicko-2, or a modified version of the aforementioned). These factors can drastically affect the absolute numbers (ratings). */
     whyAreRatingHigherExplanation: string;
     /** Why is Lichess called Lichess? */
     whyIsLichessCalledLichess: string;
@@ -1511,7 +1511,7 @@ interface I18n {
     aPawnOnTheSecondRank: string;
     /** Attack the opponent's king */
     attackTheOpponentsKing: string;
-    /** Attack your opponent's king */
+    /** Attack your opponent's king */
     attackYourOpponentsKing: string;
     /** Awesome! */
     awesome: string;
@@ -1521,7 +1521,7 @@ interface I18n {
     bishopComplete: string;
     /** Next we will learn how to manoeuvre a bishop! */
     bishopIntro: string;
-    /** Black just moved the pawn */
+    /** Black just moved the pawn */
     blackJustMovedThePawnByTwoSquares: string;
     /** Board setup */
     boardSetup: string;
@@ -1541,13 +1541,13 @@ interface I18n {
     captureIntro: string;
     /** Capture, then promote! */
     captureThenPromote: string;
-    /** Move your king two squares */
+    /** Move your king two squares */
     castleKingSide: string;
-    /** Castle king-side! */
+    /** Castle king-side! */
     castleKingSideMovePiecesFirst: string;
-    /** Move your king two squares */
+    /** Move your king two squares */
     castleQueenSide: string;
-    /** Castle queen-side! */
+    /** Castle queen-side! */
     castleQueenSideMovePiecesFirst: string;
     /** Castling */
     castling: string;
@@ -1559,7 +1559,7 @@ interface I18n {
     checkInOne: string;
     /** Congratulations! You checked your opponent, forcing them to defend their king! */
     checkInOneComplete: string;
-    /** Aim at the opponent's king */
+    /** Aim at the opponent's king */
     checkInOneGoal: string;
     /** To check your opponent, attack their king. They must defend it! */
     checkInOneIntro: string;
@@ -1567,7 +1567,7 @@ interface I18n {
     checkInTwo: string;
     /** Congratulations! You checked your opponent, forcing them to defend their king! */
     checkInTwoComplete: string;
-    /** Threaten the opponent's king */
+    /** Threaten the opponent's king */
     checkInTwoGoal: string;
     /** Find the right combination of two moves that checks the opponent's king! */
     checkInTwoIntro: string;
@@ -1583,7 +1583,7 @@ interface I18n {
     defeatTheOpponentsKing: string;
     /** Defend your king */
     defendYourKing: string;
-    /** Don't let them take */
+    /** Don't let them take */
     dontLetThemTakeAnyUndefendedPiece: string;
     /** En passant */
     enPassant: string;
@@ -1591,13 +1591,13 @@ interface I18n {
     enPassantComplete: string;
     /** When the opponent's pawn moves two squares, you can still take it as if it had only moved one square. */
     enPassantIntro: string;
-    /** En passant only works */
+    /** En passant only works */
     enPassantOnlyWorksImmediately: string;
-    /** En passant only works */
+    /** En passant only works */
     enPassantOnlyWorksOnFifthRank: string;
-    /** You're under attack! */
+    /** You're under attack! */
     escape: string;
-    /** Escape with the king */
+    /** Escape with the king */
     escapeOrBlock: string;
     /** Escape with the king! */
     escapeWithTheKing: string;
@@ -1607,11 +1607,11 @@ interface I18n {
     excellent: string;
     /** Exercise your tactical skills */
     exerciseYourTacticalSkills: string;
-    /** Find a way to */
+    /** Find a way to */
     findAWayToCastleKingSide: string;
-    /** Find a way to */
+    /** Find a way to */
     findAWayToCastleQueenSide: string;
-    /** First place the rooks! */
+    /** First place the rooks! */
     firstPlaceTheRooks: string;
     /** Fundamentals */
     fundamentals: string;
@@ -1619,7 +1619,7 @@ interface I18n {
     getAFreeLichessAccount: string;
     /** Grab all the stars! */
     grabAllTheStars: string;
-    /** Grab all the stars! */
+    /** Grab all the stars! */
     grabAllTheStarsNoNeedToPromote: string;
     /** Great job! */
     greatJob: string;
@@ -1647,9 +1647,9 @@ interface I18n {
     knightComplete: string;
     /** Here's a challenge for you. The knight is... a tricky piece. */
     knightIntro: string;
-    /** Knights can jump over obstacles! */
+    /** Knights can jump over obstacles! */
     knightsCanJumpOverObstacles: string;
-    /** Knights have a fancy way */
+    /** Knights have a fancy way */
     knightsHaveAFancyWay: string;
     /** Last one! */
     lastOne: string;
@@ -1667,7 +1667,7 @@ interface I18n {
     mateInOneIntro: string;
     /** Menu */
     menu: string;
-    /** Most of the time promoting to a queen is the best. */
+    /** Most of the time promoting to a queen is the best. */
     mostOfTheTimePromotingToAQueenIsBest: string;
     /** Nailed it. */
     nailedIt: string;
@@ -1675,7 +1675,7 @@ interface I18n {
     next: string;
     /** Next: %s */
     nextX: I18nFormat;
-    /** There is no escape, */
+    /** There is no escape, */
     noEscape: string;
     /** Opponents from around the world */
     opponentsFromAroundTheWorld: string;
@@ -1693,29 +1693,29 @@ interface I18n {
     pawnIntro: string;
     /** Pawn promotion */
     pawnPromotion: string;
-    /** Pawns form the front line. */
+    /** Pawns form the front line. */
     pawnsFormTheFrontLine: string;
-    /** Pawns move forward, */
+    /** Pawns move forward, */
     pawnsMoveForward: string;
-    /** Pawns move one square only. */
+    /** Pawns move one square only. */
     pawnsMoveOneSquareOnly: string;
     /** Perfect! */
     perfect: string;
     /** Piece value */
     pieceValue: string;
-    /** Congratulations! You know the value of material! */
+    /** Congratulations! You know the value of material! */
     pieceValueComplete: string;
-    /** Take the piece with the highest value! */
+    /** Take the piece with the highest value! */
     pieceValueExchange: string;
-    /** Pieces with high mobility have a higher value! */
+    /** Pieces with high mobility have a higher value! */
     pieceValueIntro: string;
-    /** Take the piece */
+    /** Take the piece */
     pieceValueLegal: string;
-    /** Place the bishops! */
+    /** Place the bishops! */
     placeTheBishops: string;
-    /** Place the king! */
+    /** Place the king! */
     placeTheKing: string;
-    /** Place the queen! */
+    /** Place the queen! */
     placeTheQueen: string;
     /** play! */
     play: string;
@@ -1743,7 +1743,7 @@ interface I18n {
     queenComplete: string;
     /** The most powerful chess piece enters. Her majesty the queen! */
     queenIntro: string;
-    /** Take the piece */
+    /** Take the piece */
     queenOverBishop: string;
     /** Register */
     register: string;
@@ -1755,7 +1755,7 @@ interface I18n {
     rightOn: string;
     /** Congratulations! You have successfully mastered the rook. */
     rookComplete: string;
-    /** Click on the rook */
+    /** Click on the rook */
     rookGoal: string;
     /** The rook is a powerful piece. Are you ready to command it? */
     rookIntro: string;
@@ -1769,7 +1769,7 @@ interface I18n {
     stalemate: string;
     /** Congratulations! Better be stalemated than checkmated! */
     stalemateComplete: string;
-    /** To stalemate black: */
+    /** To stalemate black: */
     stalemateGoal: string;
     /** When a player is not in check and does not have a legal move, it's a stalemate. The game is drawn: no one wins, no one loses. */
     stalemateIntro: string;
@@ -1777,33 +1777,33 @@ interface I18n {
     takeAllThePawnsEnPassant: string;
     /** Take the black pieces! */
     takeTheBlackPieces: string;
-    /** Take the black pieces! */
+    /** Take the black pieces! */
     takeTheBlackPiecesAndDontLoseYours: string;
     /** Take the enemy pieces */
     takeTheEnemyPieces: string;
-    /** Take the piece */
+    /** Take the piece */
     takeThePieceWithTheHighestValue: string;
     /** Test your skills with the computer */
     testYourSkillsWithTheComputer: string;
     /** The bishop */
     theBishop: string;
-    /** The fewer moves you make, */
+    /** The fewer moves you make, */
     theFewerMoves: string;
     /** The game is a draw */
     theGameIsADraw: string;
     /** The king */
     theKing: string;
-    /** The king cannot escape, */
+    /** The king cannot escape, */
     theKingCannotEscapeButBlock: string;
     /** The king is slow. */
     theKingIsSlow: string;
     /** The knight */
     theKnight: string;
-    /** The knight is in the way! */
+    /** The knight is in the way! */
     theKnightIsInTheWay: string;
     /** The most important piece */
     theMostImportantPiece: string;
-    /** Then place the knights! */
+    /** Then place the knights! */
     thenPlaceTheKnights: string;
     /** The pawn */
     thePawn: string;
@@ -1815,15 +1815,15 @@ interface I18n {
     theSpecialKingMove: string;
     /** The special pawn move */
     theSpecialPawnMove: string;
-    /** This is the initial position */
+    /** This is the initial position */
     thisIsTheInitialPosition: string;
-    /** This knight is checking */
+    /** This knight is checking */
     thisKnightIsCheckingThroughYourDefenses: string;
     /** Two moves to give a check */
     twoMovesToGiveCheck: string;
-    /** Use all the pawns! */
+    /** Use all the pawns! */
     useAllThePawns: string;
-    /** Use two rooks */
+    /** Use two rooks */
     useTwoRooks: string;
     /** Videos */
     videos: string;
@@ -1835,15 +1835,15 @@ interface I18n {
     whatNext: string;
     /** Yes, yes, yes! */
     yesYesYes: string;
-    /** You can get out of check */
+    /** You can get out of check */
     youCanGetOutOfCheckByTaking: string;
-    /** You cannot castle if */
+    /** You cannot castle if */
     youCannotCastleIfAttacked: string;
-    /** You cannot castle if */
+    /** You cannot castle if */
     youCannotCastleIfMoved: string;
     /** You know how to play chess, congratulations! Do you want to become a stronger player? */
     youKnowHowToPlayChess: string;
-    /** One light-squared bishop, */
+    /** One light-squared bishop, */
     youNeedBothBishops: string;
     /** You're good at this! */
     youreGoodAtThis: string;
@@ -1857,7 +1857,7 @@ interface I18n {
     lichobileNewAppAvailable: string;
     /** Please download the new official Lichess app at %s. */
     lichobileNewAppDownload: I18nFormat;
-    /** Hello, */
+    /** Hello, */
     modActionFeedback: string;
   };
   nvui: {
@@ -2209,7 +2209,7 @@ interface I18n {
     noAdsNoSubs: string;
     /** No longer support Lichess */
     noLongerSupport: string;
-    /** No, because Lichess is entirely free, forever, and for everyone. That's a promise. */
+    /** No, because Lichess is entirely free, forever, and for everyone. That's a promise. */
     noPatronFeatures: string;
     /** You are now a lifetime Lichess Patron! */
     nowLifetime: string;
@@ -2245,7 +2245,7 @@ interface I18n {
     pleaseEnterAmountInX: I18nFormat;
     /** Recurring billing, renewing your Patron wings every month. */
     recurringBilling: string;
-    /** First of all, powerful servers. */
+    /** First of all, powerful servers. */
     serversAndDeveloper: I18nFormat;
     /** A single donation that grants you the Patron wings for one month. */
     singleDonation: string;
@@ -2535,7 +2535,7 @@ interface I18n {
     explainCanThenBeTemporarilyDisabled: string;
     /** Hold the <ctrl> key while promoting to temporarily disable auto-promotion */
     explainPromoteToQueenAutomatically: string;
-    /** Hides all ratings from Lichess, to help you focus on the game. */
+    /** Hides all ratings from Lichess, to help you focus on the game. */
     explainShowPlayerRatings: string;
     /** If you have frequent disconnects, try changing the routing. */
     frequentDisconnectsAdvice: string;
@@ -2719,7 +2719,7 @@ interface I18n {
     fromGameLink: I18nFormat;
     /** From my games */
     fromMyGames: string;
-    /** You have no puzzles in the database, but Lichess still loves you very much. */
+    /** You have no puzzles in the database, but Lichess still loves you very much. */
     fromMyGamesNone: string;
     /** Goals */
     goals: string;
@@ -3535,7 +3535,7 @@ interface I18n {
     cancelSimul: string;
     /** Cancel the tournament */
     cancelTournament: string;
-    /** It is not possible to filter by rating because your rating is not stable. */
+    /** It is not possible to filter by rating because your rating is not stable. */
     cannotFilterByUnstableRating: string;
     /** Please solve the chess captcha. */
     'captcha.fail': string;
@@ -3911,7 +3911,7 @@ interface I18n {
     freeOnlineChess: string;
     /** Friends */
     friends: string;
-    /** Friends online: %1$s */
+    /** Friends online: %1$s */
     friendsOnlineAndPlaying: I18nFormat;
     /** Game aborted */
     gameAborted: string;
@@ -4465,7 +4465,7 @@ interface I18n {
     popularOpenings: string;
     /** Position as image */
     positionAsImage: string;
-    /** Paste a valid FEN to start every game from a given position. */
+    /** Paste a valid FEN to start every game from a given position. */
     positionInputHelp: I18nFormat;
     /** edited */
     postEdited: string;
@@ -5805,7 +5805,7 @@ interface I18n {
     joinOrCreateTeam: string;
     /** Late join */
     lateJoin: string;
-    /** Yes, until more than half the rounds have started. For example in an 11-round Swiss tournament, players can join before round 6 starts. In a 12-round tournament, players can join before round 7 starts. */
+    /** Yes, until more than half the rounds have started. For example in an 11-round Swiss tournament, players can join before round 6 starts. In a 12-round tournament, players can join before round 7 starts. */
     lateJoinA: string;
     /** Can players late-join? */
     lateJoinQ: string;
@@ -5813,7 +5813,7 @@ interface I18n {
     lateJoinUntil: string;
     /** Manual pairings in next round */
     manualPairings: string;
-    /** Manually specify all pairings for the next round. One player pair per line. Example: */
+    /** Manually specify all pairings for the next round. One player pair per line. Example: */
     manualPairingsHelp: string;
     /** When all possible pairings have been played, the tournament will be ended and a winner declared. */
     moreRoundsThanPlayersA: string;
@@ -5831,7 +5831,7 @@ interface I18n {
     nextRound: string;
     /** Now playing */
     nowPlaying: string;
-    /** A player gets a bye of one point every time the pairing system can't find a pairing for them. */
+    /** A player gets a bye of one point every time the pairing system can't find a pairing for them. */
     numberOfByesA: string;
     /** How many byes can a player get? */
     numberOfByesQ: string;
@@ -5875,7 +5875,7 @@ interface I18n {
     pauseSwiss: string;
     /** Play your games */
     playYourGames: string;
-    /** A win is worth one point, a draw is a half point, and a loss is zero points. */
+    /** A win is worth one point, a draw is a half point, and a loss is zero points. */
     pointsCalculationA: string;
     /** How are points calculated? */
     pointsCalculationQ: string;
@@ -5885,17 +5885,17 @@ interface I18n {
     predefinedDuration: string;
     /** Only allow specific players to join */
     predefinedUsers: string;
-    /** Enter one username per line. Only these players will be allowed to join. */
+    /** Enter one username per line. Only these players will be allowed to join. */
     predefinedUsersHelp: string;
-    /** Players who sign up for Swiss events but don't play their games can be problematic. */
+    /** Players who sign up for Swiss events but don't play their games can be problematic. */
     protectionAgainstNoShowA: string;
     /** What is done regarding no-shows? */
     protectionAgainstNoShowQ: string;
-    /** Swiss tournaments were not designed for online chess. They demand punctuality, dedication and patience from players. */
+    /** Swiss tournaments were not designed for online chess. They demand punctuality, dedication and patience from players. */
     restrictedToTeamsA: string;
     /** Interval between rounds */
     roundInterval: string;
-    /** We'd like to add it, but unfortunately Round Robin doesn't work online. */
+    /** We'd like to add it, but unfortunately Round Robin doesn't work online. */
     roundRobinA: string;
     /** Rounds are started manually */
     roundsAreStartedManually: string;
@@ -5913,15 +5913,15 @@ interface I18n {
     swissDescription: I18nFormat;
     /** Swiss tournaments */
     swissTournaments: string;
-    /** In a Swiss tournament, all participants play the same number of games, and can only play each other once. */
+    /** In a Swiss tournament, all participants play the same number of games, and can only play each other once. */
     swissVsArenaA: string;
     /** When to use Swiss tournaments instead of arenas? */
     swissVsArenaQ: string;
-    /** Swiss tournaments can only be created by team leaders, and can only be played by team members. */
+    /** Swiss tournaments can only be created by team leaders, and can only be played by team members. */
     teamOnly: I18nFormat;
     /** Tie Break */
     tieBreak: string;
-    /** With the %s. */
+    /** With the %s. */
     tiebreaksCalculationA: I18nFormat;
     /** How are tie breaks calculated? */
     tiebreaksCalculationQ: string;
@@ -5933,7 +5933,7 @@ interface I18n {
     unlimitedAndFree: string;
     /** View all %s rounds */
     viewAllXRounds: I18nPlural;
-    /** Their clock will start, they will run out of time, and lose the game. */
+    /** Their clock will start, they will run out of time, and lose the game. */
     whatIfOneDoesntPlayA: string;
     /** What happens if a player doesn't play a game? */
     whatIfOneDoesntPlayQ: string;
@@ -6017,7 +6017,7 @@ interface I18n {
     numberOfLeadsPerTeamHelp: string;
     /** One team per line. Use the auto-completion. */
     oneTeamPerLine: string;
-    /** You can copy-paste this list from one tournament to another! */
+    /** You can copy-paste this list from one tournament to another! */
     oneTeamPerLineHelp: string;
     /** Please add a new team leader before leaving, or close the team. */
     onlyLeaderLeavesTeam: string;
@@ -6085,7 +6085,7 @@ interface I18n {
     openTwoFactorApp: string;
     /** Scan the QR code with the app. */
     scanTheCode: string;
-    /** Please enable two-factor authentication to secure your account at https://lichess.org/account/twofactor. */
+    /** Please enable two-factor authentication to secure your account at https://lichess.org/account/twofactor. */
     setupReminder: string;
     /** Get an app for two-factor authentication. We recommend the following apps: */
     twoFactorAppRecommend: string;

@@ -1,11 +1,11 @@
 import fs from 'node:fs';
-import { relative, join, resolve } from 'node:path';
+import { dirname, relative, join, resolve } from 'node:path';
 import pc from 'picocolors';
 
 import { isEquivalent } from './algo.ts';
 import { env, type Package } from './env.ts';
 import { type Manifest, updateManifest } from './manifest.ts';
-import { isClose, getHash } from './parse.ts';
+import { isClose, getHash, readable } from './parse.ts';
 import { makeTask } from './task.ts';
 
 export async function hash(): Promise<void> {
@@ -38,7 +38,7 @@ export async function hash(): Promise<void> {
           const shouldLog = !isEquivalent(files, fullList);
           await Promise.all(
             files.map(async src => {
-              const name = relative(env.outDir, src);
+              const name = relative(env.outDir, src).replaceAll('\\', '/');
               const hash =
                 symlinkHashes[name] && !(await isLinkStale(hashedBasename(name, symlinkHashes[name])))
                   ? symlinkHashes[name]
@@ -114,8 +114,13 @@ async function hashAndLink(name: string) {
   const [content, { mtime }] = await Promise.all([fs.promises.readFile(src), fs.promises.stat(src)]);
   const hash = getHash(content);
   const link = join(env.hashOutDir, hashedBasename(name, hash));
-  await fs.promises.symlink(relative(env.outDir, name), link).catch(() => {});
-  await fs.promises.lutimes(link, mtime, mtime);
+  // symlinks need developer mode on windows, fall back to a copy
+  if (!(await readable(link)))
+    await fs.promises.symlink(relative(env.outDir, name), link).catch(async () => {
+      await fs.promises.mkdir(dirname(link), { recursive: true });
+      await fs.promises.copyFile(src, link).catch(() => {});
+    });
+  await fs.promises.lutimes(link, mtime, mtime).catch(() => {});
   return hash;
 }
 

@@ -69,9 +69,10 @@ export async function stopEsbuild(): Promise<void> {
 function inlineTask() {
   const js: Manifest = {};
   const inlineToModule: Record<string, string> = {};
+  const norm = (p: string) => p.replaceAll('\\', '/');
   for (const [pkg, bundle] of env.tasks('bundle'))
     if (bundle.inline)
-      inlineToModule[join(pkg.root, bundle.inline)] = bundle.module
+      inlineToModule[norm(join(pkg.root, bundle.inline))] = bundle.module
         ? basename(bundle.module, '.ts')
         : basename(bundle.inline, '.inline.ts');
   return makeTask({
@@ -86,7 +87,8 @@ function inlineTask() {
     execute: (_, inlines) =>
       Promise.all(
         inlines.map(async inlineSrc => {
-          const moduleName = inlineToModule[inlineSrc];
+          const moduleName = inlineToModule[norm(inlineSrc)];
+          if (!moduleName) throw `no bundle module for inline '${inlineSrc}'`;
           try {
             const res = await es.transform(await fs.promises.readFile(inlineSrc), {
               minify: true,
@@ -142,7 +144,7 @@ function esbuildLog(msgs: es.Message[], error = false): void {
 }
 
 function splitPath(path: string) {
-  const match = path.match(/\/public\/compiled\/(.*)\.([A-Z0-9]+)\.js$/);
+  const match = path.match(/[\\/]public[\\/]compiled[\\/](.*)\.([A-Z0-9]+)\.js$/);
   return match ? { name: match[1], hash: match[2] } : undefined;
 }
 

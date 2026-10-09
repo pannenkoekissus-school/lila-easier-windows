@@ -25,10 +25,17 @@ export function stopSass(): void {
 export async function sass(): Promise<string | undefined> {
   if (!env.begin('sass')) return undefined;
 
-  const sassBin =
-    process.env.SASS_PATH ??
-    (await fs.promises.realpath(join(env.buildDir, 'node_modules', `.bin`, 'sasso')));
+  // on windows the .bin shim is a shell script that cannot be spawned directly,
+  // so run the package cli through node instead
+  const sassPath = process.env.SASS_PATH
+    ?? (process.platform === 'win32'
+        ? join(env.buildDir, 'node_modules', 'sasso', 'cli.mjs')
+        : join(env.buildDir, 'node_modules', `.bin`, 'sasso'));
+  const sassBin = await fs.promises.realpath(sassPath).catch(() => sassPath);
   if (!(await readable(sassBin))) env.exit(`Sass executable not found '${pc.cyan(sassBin)}'`, 'sass');
+  const sassRun = sassBin.endsWith('.mjs')
+    ? { file: process.execPath, args: [sassBin] }
+    : { file: sassBin, args: [] as string[] };
 
   await Promise.allSettled([
     fs.promises.mkdir(env.cssOutDir),
@@ -64,7 +71,7 @@ export async function sass(): Promise<string | undefined> {
           : new Set([...remaining, ...concreteTouched].filter(x => concreteAll.has(x)));
 
       const buildSources = [...remaining];
-      remaining = new Set(await compile(sassBin, buildSources, remaining.size < concreteAll.size));
+      remaining = new Set(await compile(sassRun, buildSources, remaining.size < concreteAll.size));
 
       if (remaining.size) throw `in ${[...remaining].map(s => `'${pc.cyan(s)}'`).join(', ')}`;
       const replacements = urlReplacements();
@@ -87,7 +94,11 @@ const SASS_ARGS = [
 ].concat(env.prod ? ['--style=compressed', '--no-source-map'] : ['--embed-sources']);
 
 // compile an array of concrete scss files, return any that error
-async function compile(sassBin: string, sources: string[], logAll = true): Promise<string[]> {
+async function compile(
+  sassRun: { file: string; args: string[] },
+  sources: string[],
+  logAll = true,
+): Promise<string[]> {
   return new Promise(resolveWithErrors => {
     if (!sources.length) return resolveWithErrors([]);
     if (logAll) sources.forEach(src => env.log(`Building '${pc.cyan(src)}'`, 'sass'));
@@ -96,7 +107,10 @@ async function compile(sassBin: string, sources: string[], logAll = true): Promi
     sassPs?.removeAllListeners();
 
     const compileStarted = Date.now();
-    sassPs = cps.spawn(sassBin, SASS_ARGS.concat(sources.map((src: string) => `${src}:${absTempCss(src)}`)));
+    sassPs = cps.spawn(
+      sassRun.file,
+      sassRun.args.concat(SASS_ARGS, sources.map((src: string) => `${src}:${absTempCss(src)}`)),
+    );
 
     sassPs.stderr?.on('data', (buf: Buffer) => sassError(buf.toString('utf8')));
     sassPs.stdout?.on('data', (buf: Buffer) => sassError(buf.toString('utf8')));
@@ -120,6 +134,8 @@ async function compile(sassBin: string, sources: string[], logAll = true): Promi
             return resolveWithErrors([]);
           })
           .catch(() => resolveWithErrors(sources));
+      } else {
+        resolveWithErrors(sources);
       }
     });
   });
@@ -186,7 +202,7 @@ async function parseScss(src: string, processed: Set<string>) {
 async function buildColorWrap() {
   const cssVars = new Set<string>();
 
-  for (const file of await glob(join(env.themeDir, '_*.scss'))) {
+  for (const file of await glob('_*.scss', { cwd: env.themeDir })) {
     if (!file.includes('theme.')) continue;
     for (const line of (await fs.promises.readFile(file, 'utf8')).split('\n')) {
       if (!line.includes('--c-')) continue;
