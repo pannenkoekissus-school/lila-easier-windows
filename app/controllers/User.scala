@@ -46,13 +46,12 @@ final class User(
               case Some(mine) => Redirect(routes.Round.player(mine.fullId))
               case _ => roundC.watch(pov, userTv = user.some)
 
-  def tvExport(username: UserStr) = Anon:
-    env.game.cached
-      .lastPlayedPlayingId(username.id)
-      .orElse(env.game.gameRepo.quickLastPlayedId(username.id))
-      .flatMap:
-        case None => NotFound("No ongoing game")
-        case Some(gameId) => gameC.exportGame(gameId)
+  def tvExport(username: UserStr) = Anon: _ ?=>
+    Found(
+      env.round.playing
+        .lastPlayedPlayingId(username.id)
+        .orElse(env.game.gameRepo.quickLastPlayedId(username.id))
+    )(gameC.exportGame)
 
   private def gamesForLichobile(u: UserModel, filter: String, page: Int)(using BodyContext[?]) =
     userGames(u, filter, page).flatMap(env.game.userGameApi.jsPaginator).map { res =>
@@ -80,10 +79,9 @@ final class User(
     ctx.isAnon && (HTTPRequest.noReferer(ctx.req) || proxy.couldBeEnum)
 
   private def renderShow(u: UserModel, status: Results.Status = Results.Ok)(using
-      Context,
-      IsProxy
-  ): Fu[Result] =
-    limit.enumeration.userProfile(rateLimited):
+      ctx: Context
+  )(using IsProxy): Fu[Result] =
+    limit.userProfileLimiter(rateLimited):
       val showActivityAndGames = isRestricted.not && !UserId.isOfficial(u.id)
       def fetchActivity = showActivityAndGames.so(env.activity.read.recentAndPreload(u))
       if HTTPRequest.isSynchronousHttp(ctx.req)
@@ -92,10 +90,12 @@ final class User(
           if isGrantedOpt(_.UserModView) then 0
           else if env.socket.isOnline.exec(u.id) then 1
           else 2
-        userShowHtmlRateLimit(rateLimited, cost = cost):
+        userShowHtmlRateLimit.knownProxy(rateLimited, cost = cost):
           for
             as <- fetchActivity
-            nbs <- showActivityAndGames.not.so(env.userNbGames(u, withCrosstable = false))
+            nbs <- showActivityAndGames
+              .so(ctx.me)
+              .soUse(env.userNbGames(u, withCrosstable = false, withPlaying = false))
             info <- env.userInfo.fetch(u, nbs, isRestricted)
             _ <- env.userInfo.preloadTeams(info)
             social <- env.socialInfo(u)
@@ -119,17 +119,17 @@ final class User(
 
   def gamesAll(username: UserStr, page: Int) = games(username, GameFilter.all.name, page)
 
-  def games(username: UserStr, filter: String, page: Int) = OpenBody:
+  def games(username: UserStr, filter: String, page: Int) = OpenBody: ctx ?=>
     Reasonable(page):
       val isSearch = filter == GameFilter.search.name
       RequireAuthIf(UserAgentParser.trust.isSuspicious || page > 1 || isSearch):
         WithProxy: proxy ?=>
-          limit.enumeration.userProfile(rateLimited):
+          limit.userProfileLimiter(rateLimited):
             EnabledUser(username): u =>
               val full = !isRestricted
               negotiate(
                 html = for
-                  nbs <- full.so(env.userNbGames(u, withCrosstable = true))
+                  nbs <- full.so(ctx.me).soUse(env.userNbGames(u, withCrosstable = true, withPlaying = true))
                   filters = lila.app.mashup.GameFilterMenu(u, nbs, filter, ctx.isAuth)
                   pag <- full.so(env.gamePaginator(u, nbs.some, filter = filters.current, page = page))
                   _ <- lightUserApi.preloadMany(pag.currentPageResults.flatMap(_.userIds))
@@ -543,23 +543,25 @@ final class User(
       yield Ok(page)
   }
 
-  def perfStat(username: UserStr, perfKey: PerfKey) = Open:
-    val canCompute = req.client.isHuman && ctx.isAuth
-    Found(env.perfStat.api.data(username, perfKey, computeIfNeeded = canCompute)): data =>
-      negotiate(
-        Ok.async:
-          env.history
-            .ratingChartApi(data.user.user, computeIfNeeded = canCompute)
-            .map:
-              views.user.perfStatPage(data, _)
-        ,
-        JsonOk:
-          getBool("graph")
-            .optionFu:
-              env.history.ratingChartApi.singlePerf(data.user.user, data.stat.perfType.key)
-            .map: graph =>
-              env.perfStat.jsonView(data).add("graph", graph)
-      )
+  def perfStat(username: UserStr, perfKey: PerfKey) = Open: _ ?=>
+    WithProxy:
+      val canCompute = req.client.isHuman && ctx.isAuth
+      limit.userProfileLimiter(rateLimited):
+        Found(env.perfStat.api.data(username, perfKey, computeIfNeeded = canCompute)): data =>
+          negotiate(
+            Ok.async:
+              env.history
+                .ratingChartApi(data.user.user, computeIfNeeded = canCompute)
+                .map:
+                  views.user.perfStatPage(data, _)
+            ,
+            JsonOk:
+              getBool("graph")
+                .optionFu:
+                  env.history.ratingChartApi.singlePerf(data.user.user, data.stat.perfType.key)
+                .map: graph =>
+                  env.perfStat.jsonView(data).add("graph", graph)
+          )
 
   def autocomplete = OpenOrScoped(): ctx ?=>
     NoTor:
